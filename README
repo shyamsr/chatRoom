@@ -1,0 +1,43 @@
+Design approach-
+
+Server: 
+The chat server will be a multi-threaded implementation and using select()
+The server uses a default port number to listen for incoming connnections.
+The master socket listens and accepts any incoming connection initially. The command is decoded and the action is take accordingly:
+
+create - a new chat room data sructure is creeated
+struct chatroom_inst {
+        int             sd;                             /* socket descriptor of new chatroom socket */
+        int             port;                           /* this is the slave socket port */
+        pthread_t       id;                             /* thread id of particular chatroom */
+        char            name[MAX_CHATROOM_NAME];        /* chat room name */
+        int             clients[MAX_CLIENTS];           /* holds all the client's master socket descriptors */
+};
+
+join - a new thread is created to service the chatroom. the arguments to the thread are passed through the heap and freed 
+inside the thread after copying them to the localmemory of the thread.
+
+delete - the correct chatroom_inst structure is found and port number is reset to 0 and all connections are closed.
+
+Client:
+The client is designed to send CREATE, JOIN and DELETE requests
+Formats of request-
+create <chat-room-name>
+join <chat-room-name>
+delete <chat-room-name>
+I used only select() to implement the client
+
+Data structures-
+
+struct msg {
+        int type;                                   /* type of message 0:create 1:Join 2:Delete 10:CreateACK 11:JoinACK */
+        int length;                                 /*Length of pacekt, interchangably used as port number for Join and Create ACKs*/
+};
+
+The message is used to identify the type of command.
+
+
+Usage-
+./server
+./client <ip or name of server>
+
