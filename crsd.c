@@ -341,7 +341,7 @@ int main(int argc, char* argv[]) {
 				pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
 				memset(buf, 0, sizeof(buf));
-				memset(msg_buf, 0, sizeof(buf));
+				memset(msg_buf, 0, sizeof(msg_buf));
 				msg_buf[19] = 0;
 				i = read(temp_fd, msg_buf, MSG_SIZE);
 				if(i > 0) {
